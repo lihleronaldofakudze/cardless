@@ -1,3 +1,9 @@
 {
-  "cSpell.words": ["cardless"]
+  "cSpell.words": ["cardless"],
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "[dart]": {
+    "editor.defaultFormatter": "Dart-Code.dart-code",
+    "editor.formatOnSave": true
+  }
 }

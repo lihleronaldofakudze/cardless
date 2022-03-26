@@ -17,11 +17,11 @@ class CardLess extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         '/': (context) => AnimatedSplashScreen(
-              nextScreen: const HomeScreen(),
+              nextScreen: HomeScreen(),
               splash: Image.asset('assets/images/cardless.png'),
             ),
-        '/home': (context) => const HomeScreen(),
-        '/card_image': (context) => CardImageScreen()
+        '/home': (context) => HomeScreen(),
+        '/card_image': (context) => CardImageScreen(cardId: 0,)
       },
       theme: ThemeData(
         primarySwatch: Colors.red,

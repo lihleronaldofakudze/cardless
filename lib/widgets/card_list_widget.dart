@@ -1,3 +1,4 @@
+import 'package:cardless/screens/card_image_screen.dart';
 import 'package:cardless/services/database.dart';
 import 'package:flutter/material.dart';
 
@@ -20,8 +21,8 @@ class _CardListWidgetState extends State<CardListWidget> {
     return ListView.separated(
         itemBuilder: (context, index) => ListTile(
               onTap: () {
-                Navigator.pushNamed(context, '/card_image',
-                    arguments: widget.cards[index]);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => CardImageScreen(cardId: widget.cards[index].id!,)));
               },
               title: Text(
                 widget.cards[index].name,
@@ -29,8 +30,28 @@ class _CardListWidgetState extends State<CardListWidget> {
               ),
               trailing: IconButton(
                   onPressed: () async {
-                    CardDatabase.instance.deleteCard(widget.cards[index].id!);
-                    widget.refreshData();
+                    showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                              title: Text('Warning'),
+                              content: Text(
+                                  'Are you sure want to delete ${widget.cards[index].name} card'),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('No')),
+                                TextButton(
+                                    onPressed: () {
+                                      CardDatabase.instance
+                                          .deleteCard(widget.cards[index].id!);
+                                      Navigator.pop(context);
+                                      widget.refreshData();
+                                    },
+                                    child: Text('Yes')),
+                              ],
+                            ));
                   },
                   icon: Icon(
                     Icons.delete_rounded,

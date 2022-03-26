@@ -74,8 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 onPressed: () {
                                   if (_cardNameController.text.isNotEmpty) {
                                     ShoppingCard card = new ShoppingCard(
-                                        name: _cardNameController.text,
-                                        image: '');
+                                        name: _cardNameController.text, image: '');
                                     CardDatabase.instance.addCard(card);
                                     _refreshCards();
                                     Navigator.pop(context);
