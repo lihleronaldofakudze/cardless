@@ -9,7 +9,7 @@ void main() {
 
 class CardLess extends StatelessWidget {
   const CardLess({Key? key}) : super(key: key);
- 
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,10 +21,11 @@ class CardLess extends StatelessWidget {
               splash: Image.asset('assets/images/cardless.png'),
             ),
         '/home': (context) => HomeScreen(),
-        '/card_image': (context) => CardImageScreen(cardId: 0,)
+        '/card_image': (context) => CardImageScreen()
       },
       theme: ThemeData(
         primarySwatch: Colors.red,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
     );
   }

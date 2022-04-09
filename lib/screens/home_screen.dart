@@ -1,3 +1,4 @@
+import 'package:cardless/constants.dart';
 import 'package:cardless/widgets/card_list_widget.dart';
 import 'package:cardless/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Constants.kPrimaryColor,
         title: const Text('My Cards'),
         actions: [
           IconButton(
@@ -49,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: Text(
                             'Add new card',
                             textAlign: TextAlign.center,
+                            style: TextStyle(color: Constants.kQuinaryColor),
                           ),
                           content: SingleChildScrollView(
                             child: TextField(
@@ -74,7 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 onPressed: () {
                                   if (_cardNameController.text.isNotEmpty) {
                                     ShoppingCard card = new ShoppingCard(
-                                        name: _cardNameController.text, image: '');
+                                        name: _cardNameController.text,
+                                        image: '');
                                     CardDatabase.instance.addCard(card);
                                     _refreshCards();
                                     Navigator.pop(context);
