@@ -1,4 +1,5 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:cardless/screens/add_card_screen.dart';
 import 'package:cardless/screens/card_image_screen.dart';
 import 'package:cardless/screens/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ class CardLess extends StatelessWidget {
               splash: Image.asset('assets/images/cardless.png'),
             ),
         '/home': (context) => HomeScreen(),
+        '/add_card': (context) => AddCardScreen(),
         '/card_image': (context) => CardImageScreen()
       },
       theme: ThemeData(

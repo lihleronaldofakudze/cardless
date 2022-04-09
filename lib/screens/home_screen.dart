@@ -39,67 +39,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.pushNamed(context, '/add_card');
+        },
+        label: Text('Add Card'),
+        icon: Icon(Icons.add),
+      ),
       appBar: AppBar(
         backgroundColor: Constants.kPrimaryColor,
         title: const Text('My Cards'),
         actions: [
-          IconButton(
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (_) => AlertDialog(
-                          title: Text(
-                            'Add new card',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Constants.kQuinaryColor),
-                          ),
-                          content: SingleChildScrollView(
-                            child: TextField(
-                              controller: _cardNameController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  label: Text('Enter card store name')),
-                            ),
-                          ),
-                          actions: [
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text('Cancel'),
-                                style: ElevatedButton.styleFrom(
-                                    primary: Colors.red),
-                              ),
-                            ),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  if (_cardNameController.text.isNotEmpty) {
-                                    ShoppingCard card = new ShoppingCard(
-                                        name: _cardNameController.text,
-                                        image: '');
-                                    CardDatabase.instance.addCard(card);
-                                    _refreshCards();
-                                    Navigator.pop(context);
-                                    _cardNameController.clear();
-                                  } else {
-                                    Navigator.pop(context);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        new SnackBar(
-                                            content: Text(
-                                                'Please enter card store name first.')));
-                                  }
-                                },
-                                child: Text('Save'),
-                                style: ElevatedButton.styleFrom(
-                                    primary: Colors.green),
-                              ),
-                            ),
-                          ],
-                        ));
-              },
-              icon: const Icon(Icons.add_rounded))
+          IconButton(onPressed: _refreshCards, icon: Icon(Icons.refresh)),
         ],
       ),
       body: RefreshIndicator(

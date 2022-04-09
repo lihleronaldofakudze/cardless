@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cardless/constants.dart';
 import 'package:cardless/models/ShoppingCard.dart';
 import 'package:cardless/services/database.dart';
@@ -120,7 +121,14 @@ class _CardImageScreenState extends State<CardImageScreen> {
       image: _imageFile.path,
     );
     CardDatabase.instance.updateCard(card);
-
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.SUCCES,
+      animType: AnimType.BOTTOMSLIDE,
+      title: 'Success',
+      desc: 'Image saved successfully',
+      btnOkOnPress: () {},
+    ).show();
     setState(() {
       _isLoading = false;
     });
