@@ -29,14 +29,14 @@ class CardDatabase {
 
   //create database
   Future _createDB(Database db, int version) async {
-    final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+    final idType = 'INTEGER PRIMARY KEY';
     final textType = 'TEXT NOT NULL';
 
     //create table Transaction
     await db.execute('CREATE TABLE $tableCard ('
         '${ShoppingCardFields.id} $idType,'
         '${ShoppingCardFields.name} $textType,'
-        '${ShoppingCardFields.image} $textType'
+        '${ShoppingCardFields.barcode} $textType'
         ')');
   }
 
@@ -48,7 +48,7 @@ class CardDatabase {
   }
 
   //read Expense
-  Future<ShoppingCard> getCard(int id) async {
+  Future<ShoppingCard?> getCard(int id) async {
     final db = await instance.database;
     final maps = await db.query(tableCard,
         columns: ShoppingCardFields.values,
@@ -58,7 +58,7 @@ class CardDatabase {
     if (maps.isNotEmpty) {
       return ShoppingCard.fromJson(maps.first);
     } else {
-      throw Exception('ID $id is not available');
+      return ShoppingCard(id: 0, name: 'Card Name', barcode: barcode);
     }
   }
 

@@ -1,136 +1,95 @@
-import 'dart:io';
-
-import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:cardless/constants.dart';
 import 'package:cardless/models/ShoppingCard.dart';
 import 'package:cardless/services/database.dart';
-import 'package:cardless/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:gallery_saver/gallery_saver.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:syncfusion_flutter_barcodes/barcodes.dart';
 
 class CardImageScreen extends StatefulWidget {
-  final int? cardId;
-  const CardImageScreen({Key? key, this.cardId}) : super(key: key);
+  final String? cardName;
+  final int? cardNumber;
+  const CardImageScreen({
+    Key? key,
+    this.cardName,
+    this.cardNumber,
+  }) : super(key: key);
 
   @override
-  _CardImageScreenState createState() => _CardImageScreenState();
+  State<CardImageScreen> createState() => _CardImageScreenState();
 }
 
 class _CardImageScreenState extends State<CardImageScreen> {
-  bool _isLoading = false;
-  File _imageFile = File('');
-  late ShoppingCard _shoppingCard;
+  late ShoppingCard? _card;
+  bool _isLoading = true;
 
-  getCard() async {
+  _getData() async {
     setState(() {
       _isLoading = true;
     });
-    _shoppingCard = await CardDatabase.instance.getCard(widget.cardId!);
+
+    if (widget.cardNumber != null) {
+      _card = (await CardDatabase.instance.getCard(widget.cardNumber!))!;
+    }
+
     setState(() {
-      _isLoading = false;
+      _isLoading = true;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    getCard();
+    _getData();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading
-        ? LoadingWidget()
-        : Scaffold(
-            appBar: AppBar(
-              backgroundColor: Constants.kPrimaryColor,
-              title: Text(_shoppingCard.name),
-            ),
-            body: Padding(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  _imageFile.path == ''
-                      ? _shoppingCard.image != ''
-                          ? Image.file(File(_shoppingCard.image))
-                          : Container(
-                              height: 240,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.grey,
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'No image',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            )
-                      : Image.file(File(_imageFile.path)),
-                  SizedBox(
-                    height: 24,
+    final String cardName =
+        ModalRoute.of(context)!.settings.arguments as String;
+    return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        icon: Icon(Icons.control_camera_rounded),
+        label: Text('Scan Card'),
+        onPressed: () {
+          Navigator.pushNamed(
+            context,
+            '/add_card',
+            arguments: cardName,
+          );
+        },
+      ),
+      appBar: AppBar(
+        title: Text(cardName),
+      ),
+      body: _card == null
+          ? Center(
+              child: Container(
+                height: 200,
+                child: SfBarcodeGenerator(
+                  value: '99999999999999999',
+                  showValue: true,
+                  textSpacing: 24,
+                  textStyle: TextStyle(
+                    fontSize: 24,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ElevatedButton(
-                          autofocus: true,
-                          onPressed: _takeImageFromCamera,
-                          child: Text(_shoppingCard.image == ''
-                              ? 'Take Image'
-                              : 'Change Image')),
-                      OutlinedButton(
-                        onPressed: _saveImage,
-                        child: Text('Save Image'),
-                      ),
-                    ],
-                  )
-                ],
+                ),
+              ),
+            )
+          : Center(
+              child: Container(
+                height: 200,
+                child: SfBarcodeGenerator(
+                  value: _card!.barcode,
+                  showValue: true,
+                  textSpacing: 24,
+                  textStyle: TextStyle(
+                    fontSize: 24,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
-          );
-  }
-
-  _takeImageFromCamera() async {
-    ImagePicker().pickImage(source: ImageSource.camera).then((recordedImage) {
-      setState(() {
-        _isLoading = true;
-      });
-      GallerySaver.saveImage(recordedImage!.path).then((path) {
-        setState(() {
-          _imageFile = File(recordedImage.path);
-          _isLoading = false;
-        });
-      });
-    });
-  }
-
-  _saveImage() async {
-    setState(() {
-      _isLoading = true;
-    });
-    ShoppingCard card = ShoppingCard(
-      id: _shoppingCard.id,
-      name: _shoppingCard.name,
-      image: _imageFile.path,
     );
-    CardDatabase.instance.updateCard(card);
-    AwesomeDialog(
-      context: context,
-      dialogType: DialogType.SUCCES,
-      animType: AnimType.BOTTOMSLIDE,
-      title: 'Success',
-      desc: 'Image saved successfully',
-      btnOkOnPress: () {},
-    ).show();
-    setState(() {
-      _isLoading = false;
-    });
   }
 }

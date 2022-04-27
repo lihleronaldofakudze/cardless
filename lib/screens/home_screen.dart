@@ -1,10 +1,8 @@
 import 'package:cardless/constants.dart';
-import 'package:cardless/widgets/card_list_widget.dart';
-import 'package:cardless/widgets/loading_widget.dart';
+import 'package:cardless/lists/card_list.dart';
+import 'package:cardless/models/ShoppingCard.dart';
+import 'package:cardless/services/database.dart';
 import 'package:flutter/material.dart';
-
-import '../models/ShoppingCard.dart';
-import '../services/database.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -14,7 +12,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _cardNameController = TextEditingController();
   List<ShoppingCard> cards = [];
   bool isLoading = false;
 
@@ -39,29 +36,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.pushNamed(context, '/add_card');
-        },
-        label: Text('Add Card'),
-        icon: Icon(Icons.add),
-      ),
       appBar: AppBar(
         backgroundColor: Constants.kPrimaryColor,
         title: const Text('My Cards'),
-        actions: [
-          IconButton(onPressed: _refreshCards, icon: Icon(Icons.refresh)),
-        ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () => _refreshCards(),
-        child: isLoading
-            ? LoadingWidget()
-            : CardListWidget(
-                cards: cards,
-                refreshData: _refreshCards,
-              ),
-      ),
+      body: CardList(),
     );
   }
 }
