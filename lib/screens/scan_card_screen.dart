@@ -1,7 +1,6 @@
 import 'dart:io';
 
-import 'package:cardless/models/ShoppingCard.dart';
-import 'package:cardless/services/database.dart';
+import 'package:cardless/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -42,11 +41,13 @@ class _ScanCardScreenState extends State<ScanCardScreen> {
           ? FloatingActionButton(
               child: Icon(Icons.check),
               onPressed: () async {
-                ShoppingCard card = new ShoppingCard(
-                    id: 1, name: cardName, barcode: result!.code.toString());
-                await CardDatabase.instance.addCard(card).then((value) {
-                  Navigator.pop(context);
-                });
+                if (result != null) {
+                  DatabaseService().setString(
+                    '${cardName}',
+                    result!.code.toString(),
+                  );
+                }
+                Navigator.pushNamed(context, '/');
               },
             )
           : null,

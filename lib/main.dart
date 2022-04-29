@@ -23,7 +23,7 @@ class CardLess extends StatelessWidget {
             ),
         '/home': (context) => HomeScreen(),
         '/card_image': (context) => CardImageScreen(),
-        '/add_card': (context) => ScanCardScreen(),
+        '/scan_card': (context) => ScanCardScreen(),
       },
       theme: ThemeData(
         primarySwatch: Colors.red,

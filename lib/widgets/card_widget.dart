@@ -1,3 +1,4 @@
+import 'package:cardless/screens/card_image_screen.dart';
 import 'package:flutter/material.dart';
 
 class CardWidget extends StatelessWidget {
@@ -15,10 +16,13 @@ class CardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(
+        Navigator.push(
           context,
-          '/card_image',
-          arguments: {'name': cardName, 'cardNumber': cardNumber},
+          MaterialPageRoute(
+            builder: (context) => CardImageScreen(
+              cardName: cardName,
+            ),
+          ),
         );
       },
       child: PhysicalModel(
